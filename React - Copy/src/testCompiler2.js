@@ -7,7 +7,9 @@ import viteLogo from '/vite.svg'
 const   paragraph=() =>{
 const fn=()=>{}
   return (
-     <Self prop1 prop2=false>  <Input  onSubmit={()=>fn()}/>  </Self>
+
+       <h1>header1 content</h1>
+
   )
 }
 

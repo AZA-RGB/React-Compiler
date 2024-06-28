@@ -38,26 +38,41 @@ public class NormalJsxElement extends ASTNode  {
 
 	public String toJS() {
         StringBuilder normalJsxElementCode=new StringBuilder();
-        if(!isUpperCase(openTag.getId().charAt(0))){/// <h1></h1>
-            if (jsxExpDepth > 0) {
-                normalJsxElementCode.append('`');
-            }
+        String tagName=openTag.getId();
+        if(!isUpperCase(tagName.charAt(0))){/// <h1></h1>
 
-            normalJsxElementCode.append(openTag.toJS());
+            normalJsxElementCode.append("( ()=>{");// initializing the IIFE
+
+            normalJsxElementCode.append("const ").append(tagName).append(" = document.createElement('").append(tagName).append("');\n\t ");
+
+            //children loop
             if (!children.isEmpty()) {
                 for (Object child : children) {
-                    if (!(child instanceof String)) {
-                        normalJsxElementCode.append('\n').append(((ASTNode) child).toJS());
-                    } else
-                        normalJsxElementCode.append(child);
+                    if ((child instanceof String)) {
+                        normalJsxElementCode.append(tagName).append(".insertAdjacentHTML('beforeend','").append(child).append("');");
+                    } else if(child instanceof JsxExpression){
+                        normalJsxElementCode.append(tagName).append(".insertAdjacentHTML('beforeend', ((()=>{\n" +
+                                "  \t\t\t\t\t\t\tconst childText= ("+ ((JsxExpression) child).toJS()+");\n" +
+                                "  \t\t\t\t\t\t\tif(childText instanceof HTMLElement){\n" +
+                                "  \t\t\t\t\t\t\t    return childText.innerText\n" +
+                                "  \t\t\t\t\t\t\t}else{\n" +
+                                "  \t\t\t\t\t\t\treturn childText\n" +
+                                "  \t\t\t\t\t\t\t}\n" +
+                                "  \t\t\t\t\t\t\t\t})())");
+                    }else if(child instanceof jsx) {
+                        normalJsxElementCode.append(tagName).append(".appendChild(" + ((jsx) child).toJS() + ");");
+                    }
                     normalJsxElementCode.append(' ');
                 }
             }
-            if (jsxExpDepth > 0) {
-                normalJsxElementCode.append('`');
-            }
-            normalJsxElementCode.append(closeTag.toJS()).append("\n");
 
+            // attributes loop
+
+
+
+
+            normalJsxElementCode.append("return ").append(tagName);
+            normalJsxElementCode.append("})()");
 
             return normalJsxElementCode.toString();
         }

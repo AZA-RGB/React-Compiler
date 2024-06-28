@@ -16,7 +16,7 @@ import static org.antlr.v4.runtime.CharStreams.fromFileName;
 public class Main {
     public static void main(String args []) throws IOException {
         CharStream input=CharStreams.fromString("");
-        String source = "React - Copy/src/testCompiler1.js";
+        String source = "React - Copy/src/testCompiler2.js";
         System.out.println("generating the JS code for your components ....");
         CharStream cs = fromFileName(source);
         ReactLexer lexer = new ReactLexer(cs);

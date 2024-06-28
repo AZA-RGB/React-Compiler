@@ -210,7 +210,7 @@ program: (statement)* (( functionalComponent (statement)*  exportDefault SEMI*)|
         //</id attribute>                                                                     `
         selfClosingElement:LESS_THAN  id(DOT id)*  jsxAttribute* DIVIDE GREATER_THAN;
         //{((functionCall|expression|unaryExpression|objectLiteral)*|(function)?|jsxExpression*)}
-        jsxExpression: LCURLY ( (functionCall|expression|unaryExpression|objectLiteral)*|(function)?|spreadOperation|jsxExpression*) RCURLY ;
+        jsxExpression: LCURLY ( (functionCall|expression|unaryExpression|objectLiteral)?|(function)?|spreadOperation|jsxExpression?) RCURLY ;
         //<html a> (jsx|jsxExp|id)* </html>
         normalJsxElement:(openTag) (jsx|jsxExpression|statement)* (closeTag);
         //<>(jsx|jsxExpression|id)*<>

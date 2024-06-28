@@ -24,21 +24,14 @@ public class JsxExpression extends ASTNode {
     @Override
     public String toJS() {
         StringBuilder jsxExpressionCode= new StringBuilder();
-        if(jsxExpDepth>0){jsxExpressionCode.append('`');}
-        jsxExpressionCode.append("${");
-        jsxExpDepth+=1;
-        //System.out.println("from  jsxExpression "+ jsxExpDepth);
             for (ASTNode child : this.children) {
                 if (child != null) {
-                    if (child instanceof SpreadOperation)
-                        jsxExpressionCode.append('{').append(child.toJS()).append('}');
-                    else
+//                    if (child instanceof SpreadOperation)
+//                        jsxExpressionCode.append('{').append(child.toJS()).append('}');
+//                    else
                         jsxExpressionCode.append(child.toJS());
                 }
             }
-            jsxExpressionCode.append('}');
-            jsxExpDepth-=1;
-        if(jsxExpDepth>0){jsxExpressionCode.append('`');}
         return jsxExpressionCode.toString();
     }
 

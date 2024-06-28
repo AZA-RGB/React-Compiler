@@ -231,13 +231,9 @@ public class BaseVisitor extends ReactParserBaseVisitor {
     @Override
     public ASTNode visitJsxExpression(ReactParser.JsxExpressionContext ctx) {
         JsxExpression jsxexp = new JsxExpression();
-       // ASTNode.jsxExpDepth+=1;
-        for (int i = 1; i < ctx.children.size(); i++) {
-            if (ctx.getChild(i) != null) {
-                jsxexp.addChild((ASTNode) visit(ctx.getChild(i)));
+            if (ctx.getChild(1) != null) {
+                jsxexp.addChild((ASTNode) visit(ctx.getChild(1)));
             }
-        }
-        //ASTNode.jsxExpDepth-=1;
         return jsxexp;
     }
 
