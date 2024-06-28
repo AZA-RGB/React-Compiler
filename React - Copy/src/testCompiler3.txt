@@ -1,0 +1,15 @@
+let a = 5;
+let b = 7;
+let sum = a + b;
+console.log("The sum is: " + sum);
+//============================
+const person = {
+  name: "John Doe",
+  address: {
+    city: "New York",
+    country: "USA",
+  },
+};
+const p=new person();
+const city = person.address.city;
+console.log(city); // Output: New York

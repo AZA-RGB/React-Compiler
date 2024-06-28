@@ -1,0 +1,16 @@
+function f(){
+    try{
+        for(let x=4;x<10;x++){
+            if(x % 2==0){
+                print("$x is odd");
+            }else{
+                print("$x is even");
+            }
+        }
+    }catch(e){
+         print(e);
+    }
+}
+
+
+

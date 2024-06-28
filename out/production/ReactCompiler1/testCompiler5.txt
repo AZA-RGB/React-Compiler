@@ -1,0 +1,84 @@
+    public ASTNode visitVariableDeclarator(ReactParser.VariableDeclaratorContext ctx) {
+        Identifier id = null;
+        if (ctx.id(0) != null) {
+            id = (Identifier) visitId(ctx.id(0));
+//            Symbol symbol = new Symbol("----", "=====");
+//            symbolTable.put(id.id, symbol);
+        } else return null;
+
+
+//Handle the case where a symbol with the same name already exists
+        if (symbolTable.containsSymbol(id.id)) {
+            String errorMessage = "Semantic Error: Variable '" + id.id + "' already exists";
+            symbolTable.semanticError(errorMessage, ctx.getStart().getLine());
+        }
+//        if (!symbolTable.isDeclare(id.id)) {
+//            String errorMessage = "Semantic Error: variable '" + id.id + "' is not declare";
+//            symbolTable.semanticError(errorMessage, ctx.getStart().getLine());
+//        }
+
+
+        if (ctx.getChild(2) != null) {
+            if (ctx.getChild(2) instanceof ReactParser.LiteralContext) {
+                Literal literal = (Literal) visitLiteral((ReactParser.LiteralContext) ctx.getChild(2));
+                Symbol symbol = new Symbol(literal.type, literal.value);
+                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, literal);
+
+            }
+            if (ctx.getChild(2) instanceof ReactParser.FunctionCallContext) {
+                FunctionCall functionCall = (FunctionCall) visitFunctionCall(ctx.object().functionCall());
+                Symbol symbol = new Symbol(functionCall.functionName.toUpperCase(), "new " + functionCall.functionName.toUpperCase() + "()");
+                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, functionCall);
+            }
+
+            if (ctx.getChild(2) instanceof ReactParser.MemberExpressionContext) {
+                MemberExpression memberExpression = (MemberExpression) visitMemberExpression((ReactParser.MemberExpressionContext) ctx.getChild(2));
+                Symbol symbol = new Symbol("MemberExpression", memberExpression.toString());
+                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, memberExpression);
+
+            }
+            if (ctx.getChild(2) instanceof ReactParser.IdContext) {
+                Identifier identifier = (Identifier) visitId((ReactParser.IdContext) ctx.getChild(2));
+                if (!symbolTable.isDeclare(identifier.id)) {
+                    String errorMessage = "Semantic Error: variable '" + identifier.id + "' is not declare";
+                    symbolTable.semanticError(errorMessage, ctx.getStart().getLine());
+                }
+//                Symbol symbol = new Symbol("Identifier", identifier.id);
+//                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, identifier);
+
+            }
+            if (ctx.getChild(2) instanceof ReactParser.ObjectLiteralContext) {
+                ObjectLiteral objectLiteral = (ObjectLiteral) visitObjectLiteral((ReactParser.ObjectLiteralContext) ctx.getChild(2));
+                Symbol symbol = new Symbol("ObjectLiteral", "{key:val}");
+                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, objectLiteral);
+            }
+            if (ctx.getChild(2) instanceof ReactParser.ArrayContext) {
+                Array array = (Array) visitArray((ReactParser.ArrayContext) ctx.getChild(2));
+                Symbol symbol = new Symbol("Array", array);
+                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, array);
+            }
+            if (ctx.getChild(2) instanceof ReactParser.ArrowFunctionDeclarationContext) {
+                ArrowFunction arrowFunction = (ArrowFunction) visitArrowFunctionDeclaration((ReactParser.ArrowFunctionDeclarationContext) ctx.getChild(2));
+                Symbol symbol = new Symbol("ArrowFunction", arrowFunction);
+                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, arrowFunction);
+            }
+            if (ctx.getChild(2) instanceof ReactParser.AnonymousFunctionDeclarationContext) {
+                AnonymousFunction anonymousFunction=(AnonymousFunction) visitAnonymousFunctionDeclaration((ReactParser.AnonymousFunctionDeclarationContext) ctx.getChild(2));
+                Symbol symbol = new Symbol("AnonymousFunction", anonymousFunction);
+                symbolTable.put(id.id, symbol);
+                return new VariableDeclarator(id, anonymousFunction);
+            }
+
+        } else {
+            Symbol symbol = new Symbol("undefined", "null");
+            symbolTable.put(id.id, symbol);
+        }
+        return new VariableDeclarator(id);
+    }
