@@ -51,14 +51,14 @@ public class NormalJsxElement extends ASTNode  {
                     if ((child instanceof String)) {
                         normalJsxElementCode.append(tagName).append(".insertAdjacentHTML('beforeend','").append(child).append("');");
                     } else if(child instanceof JsxExpression){
-                        normalJsxElementCode.append(tagName).append(".insertAdjacentHTML('beforeend', ((()=>{\n" +
+                        normalJsxElementCode.append(tagName).append(".insertAdjacentHTML('beforeend', (()=>{\n" +
                                 "  \t\t\t\t\t\t\tconst childText= ("+ ((JsxExpression) child).toJS()+");\n" +
                                 "  \t\t\t\t\t\t\tif(childText instanceof HTMLElement){\n" +
-                                "  \t\t\t\t\t\t\t    return childText.innerText\n" +
+                                "  \t\t\t\t\t\t\t    return childText.outerHTML\n" +
                                 "  \t\t\t\t\t\t\t}else{\n" +
                                 "  \t\t\t\t\t\t\treturn childText\n" +
                                 "  \t\t\t\t\t\t\t}\n" +
-                                "  \t\t\t\t\t\t\t\t})())");
+                                "  \t\t\t\t\t\t\t\t})());");
                     }else if(child instanceof jsx) {
                         normalJsxElementCode.append(tagName).append(".appendChild(" + ((jsx) child).toJS() + ");");
                     }

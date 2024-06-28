@@ -6,9 +6,10 @@ import viteLogo from '/vite.svg'
 
 const   paragraph=() =>{
 const fn=()=>{}
+const count=1;
   return (
 
-       <h1>header1 content</h1>
+       <h1> text {count} text2</h1>
 
   )
 }
