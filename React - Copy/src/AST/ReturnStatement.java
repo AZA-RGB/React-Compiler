@@ -14,7 +14,7 @@ public class ReturnStatement extends ASTNode {
 
 	public String toJS() {
 		return "return ( "+
-              ( (value instanceof jsx)? ('`'+value.toJS()+'`') : (value.toJS()) )
+              (value.toJS())
                 +" );\n";
 	}
 }
