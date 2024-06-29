@@ -7,14 +7,6 @@ import Input from './Input.js'
 const App= ()=>{
 const fn = ()=>{
 };
-
-const count = [1,2,2];
-return Input(Object.assign({children:["textbefore ",...count,"textafter "].map((child)=>{
-         							    if(child instanceof HTMLElement){
-                                           return child.outerHTML
-                                       }else{
-                                           return child
-                                       }
-         							    }).join(' \n')}));
-}
+const count = "[1,2,2]";
+return  Input(Object.assign({placeholder:count}));}
 export default App;

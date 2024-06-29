@@ -25,53 +25,73 @@ public class SelfClosingTag extends ASTNode {
     }
 
 
-	public String toJS() {
-        StringBuilder selfClosingTagCode=new StringBuilder();
-
-        if (!isUpperCase(id.charAt(0))){
-            selfClosingTagCode.append("<");
-            selfClosingTagCode.append(id);
-
-            if (!jsxAttributes.isEmpty()){
-                for (ASTNode jsxAttribute : jsxAttributes) {
-                    selfClosingTagCode.append(jsxAttribute.toJS()).append(' ');
+    public String toJS() {
+        StringBuilder normalJsxElementCode=new StringBuilder();
+        String tagName=id;
+        List<ASTNode> attributes = jsxAttributes;
+        if(!isUpperCase(tagName.charAt(0))){/// <input />
+            normalJsxElementCode.append("( ()=>{");// initializing the IIFE
+            normalJsxElementCode.append("const ").append(tagName).append(" = document.createElement('").append(tagName).append("');\n\t ");
+            // attributes loop
+            if (!attributes.isEmpty()){
+                for (ASTNode attribute:attributes){
+                    if (attribute instanceof EventAttribute){
+                        normalJsxElementCode.append(tagName).append(".addEventListener(").append(attribute.toJS()).append(");");
+                    } else if (attribute instanceof JsxIdentifier) {
+                        normalJsxElementCode.append(tagName).append(".setAttribute(").append(attribute.toJS()).append(");");
+                    }else if(attribute instanceof JsxIdentifier){
+                        normalJsxElementCode.append(tagName).append(".setAttribute(").append(attribute.toJS()).append(");");
+                    }
                 }
             }
-            selfClosingTagCode.append(" />");
+            normalJsxElementCode.append("return ").append(tagName);
+            normalJsxElementCode.append("})()");
 
-            return selfClosingTagCode.toString();
-        }
-
-        else{ ///////////////////////////////////////////////////////  custom component <Card />
-            // if inside dollar ---> add
-        StringBuilder jsxAttributesCode=new StringBuilder();
-        if(!jsxAttributes.isEmpty()){
-            jsxAttributesCode.append("Object.assign(");
-            for (int i = 0; i < jsxAttributes.size() ; i++) {
-                if(i==jsxAttributes.size()-1){
-                    if(jsxAttributes.get(i) instanceof JsxIdentifier )
-                        jsxAttributesCode.append(((JsxIdentifier)jsxAttributes.get(i)).toJS(true));
-                    else if(jsxAttributes.get(i) instanceof JsxSpreadAttribute)
-                        jsxAttributesCode.append(((JsxSpreadAttribute)jsxAttributes.get(i)).toJS(true));
-                    else
-                        jsxAttributesCode.append(((EventAttribute)jsxAttributes.get(i)).toJS(true));
-                }else {
-                    if (jsxAttributes.get(i) instanceof JsxIdentifier)
-                        jsxAttributesCode.append(((JsxIdentifier) jsxAttributes.get(i)).toJS(true)).append(',');
-                    else
-                        jsxAttributesCode.append(((JsxSpreadAttribute) jsxAttributes.get(i)).toJS(true)).append(',');
-                }
-
+            return normalJsxElementCode.toString();
+        }else {
+            StringBuilder customComponentProps=new StringBuilder();
+            if (!this.jsxAttributes.isEmpty()){
+                customComponentProps.append("Object.assign(");
+                    customComponentProps.append(addAttributesToCustomComponent());
+                customComponentProps.append(')');
             }
-            jsxAttributesCode.append(')');
+
+            normalJsxElementCode.append(id).append("(").append(customComponentProps).append(");");
+
+
+
+
+
 
         }
-        if(jsxExpDepth>0) selfClosingTagCode.append('`');
-        selfClosingTagCode.append("${").append(id).append("(").append(jsxAttributesCode).append(")}");
-        if(jsxExpDepth>0) selfClosingTagCode.append('`');
-
-
-		return selfClosingTagCode.toString();
-	    }
+        
+        return normalJsxElementCode.toString();
     }
+
+
+    private String addAttributesToCustomComponent(){
+        StringBuilder jsxAttributesCode=new StringBuilder();
+        List<ASTNode> jsxAttributes =this.jsxAttributes;
+        for (int i = 0; i < jsxAttributes.size() ; i++) {
+            if(i==jsxAttributes.size()-1){
+                if(jsxAttributes.get(i) instanceof JsxIdentifier )
+                    jsxAttributesCode.append(((JsxIdentifier)jsxAttributes.get(i)).toJS(true));
+                else if(jsxAttributes.get(i) instanceof JsxSpreadAttribute)
+                    jsxAttributesCode.append(((JsxSpreadAttribute)jsxAttributes.get(i)).toJS(true));
+                else
+                    jsxAttributesCode.append(((EventAttribute)jsxAttributes.get(i)).toJS(true));
+            }else {
+                if (jsxAttributes.get(i) instanceof JsxIdentifier)
+                    jsxAttributesCode.append(((JsxIdentifier) jsxAttributes.get(i)).toJS(true)).append(',');
+                else if(jsxAttributes.get(i) instanceof JsxSpreadAttribute)
+                    jsxAttributesCode.append(((JsxSpreadAttribute) jsxAttributes.get(i)).toJS(true)).append(',');
+                else
+                    jsxAttributesCode.append(((EventAttribute)jsxAttributes.get(i)).toJS(true)).append(',');
+            }
+
+        }
+        return jsxAttributesCode.toString();
+    }
+
+   
 }
