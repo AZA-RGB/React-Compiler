@@ -18,7 +18,7 @@ public class ComponentReturnStatement extends ASTNode  {
 
 	public String toJS() {
         if (value instanceof  jsx)
-            return "return ("+value.toJS()+")";
-        return "return ( "+value.toJS()+" )";
+            return "return "+value.toJS();
+        return "return  "+value.toJS();
 	}
 }

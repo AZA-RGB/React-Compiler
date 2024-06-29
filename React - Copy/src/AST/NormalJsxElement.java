@@ -79,13 +79,6 @@ public class NormalJsxElement extends ASTNode  {
                     }
                 }
             }
-
-
-
-
-
-
-
             normalJsxElementCode.append("return ").append(tagName);
             normalJsxElementCode.append("})()");
 
@@ -103,9 +96,8 @@ public class NormalJsxElement extends ASTNode  {
                         }
                     customComponentProps.append(')');
                 }
-                if (jsxExpDepth > 0) normalJsxElementCode.append('`');
-                normalJsxElementCode.append("${").append(openTag.getId()).append("(").append(customComponentProps).append(")}");
-                if (jsxExpDepth > 0)  normalJsxElementCode.append('`');
+
+                normalJsxElementCode.append(openTag.getId()).append("(").append(customComponentProps).append(");");
             }
 
             return normalJsxElementCode.toString();
@@ -137,26 +129,27 @@ public class NormalJsxElement extends ASTNode  {
     }
 
     private String addChildrenToCustomComponent(){
-        StringBuilder childrenCode=new StringBuilder("{children:");
+        StringBuilder childrenCode=new StringBuilder("{children:[");
         System.out.println(
-                children.toString()
+               // children.toString()
         );
             for (Object child : children) {
                 if(children.indexOf(child)!=0 && children.size()>1) {// if it is the first but not last
-                    childrenCode.append('+');
+                    childrenCode.append(',');
                 }
                 if (child instanceof String) { /* `fascia` */
-                    childrenCode.append('`').append(child).append('`');
+                    childrenCode.append('"').append(child).append('"');
                 } else {
-                    String childToJs = ((ASTNode) child).toJS();
-                    if (childToJs.charAt(0) == '`') {
-                            childrenCode.append(childToJs);
-                        } else {
-                            childrenCode.append('`').append(childToJs).append('`');
-                        }
+                            childrenCode.append(((ASTNode) child).toJS());
                     }
                 }
-            childrenCode.append('}');
+            childrenCode.append("].map((child)=>{\n" +
+                    "  \t\t\t\t\t\t\t    if(child instanceof HTMLElement){\n" +
+                    "                                    return child.outerHTML\n" +
+                    "                                }else{\n" +
+                    "                                    return child\n" +
+                    "                                }\n" +
+                    "  \t\t\t\t\t\t\t    }).join('\\n')}");
             return  childrenCode.toString();
     }
 

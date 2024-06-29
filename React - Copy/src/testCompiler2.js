@@ -7,7 +7,8 @@ import viteLogo from '/vite.svg'
 const   App=() =>{
 const fn=()=>{}
 const count=[1,2,2];
- return <input {...count} >{count}</input>
+const input=<input placeholder="write here"></input>;
+ return <Input  >textbefore {...count} textafter</Input>
 }
 
 export default App

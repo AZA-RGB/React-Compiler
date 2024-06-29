@@ -9,14 +9,14 @@ const fn = ()=>{
 };
 ;
 const count = [1,2,2];
-return (( ()=>{const input = document.createElement('input');
-	 input.insertAdjacentHTML('beforeend', (()=>{
-  							const childText= (count);
-  							if(childText instanceof HTMLElement){
-  							    return childText.outerHTML
-  							}else{
-  							return childText
-  							}
-  								})()); input.setAttribute('placeholder' , ...count);return input})())
+const input = ( ()=>{const input = document.createElement('input');
+	 input.setAttribute('placeholder' , "write here");return input})();
+return Input(Object.assign({children:["textbefore ",...count,"textafter "].map((child)=>{
+  							    if(child instanceof HTMLElement){
+                                    return child.outerHTML
+                                }else{
+                                    return child
+                                }
+  							    }).join('\n')}));
 }
 export default App;

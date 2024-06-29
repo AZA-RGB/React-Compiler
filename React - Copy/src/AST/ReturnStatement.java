@@ -13,8 +13,8 @@ public class ReturnStatement extends ASTNode {
     }
 
 	public String toJS() {
-		return "return ( "+
+		return "return  "+
               (value.toJS())
-                +" );\n";
+                +" \n";
 	}
 }
