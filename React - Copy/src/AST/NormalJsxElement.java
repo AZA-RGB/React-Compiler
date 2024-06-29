@@ -39,6 +39,7 @@ public class NormalJsxElement extends ASTNode  {
 	public String toJS() {
         StringBuilder normalJsxElementCode=new StringBuilder();
         String tagName=openTag.getId();
+        List<ASTNode> attributes = openTag.jsxAttributes;
         if(!isUpperCase(tagName.charAt(0))){/// <h1></h1>
 
             normalJsxElementCode.append("( ()=>{");// initializing the IIFE
@@ -67,6 +68,16 @@ public class NormalJsxElement extends ASTNode  {
             }
 
             // attributes loop
+            if (!attributes.isEmpty()){
+                for (ASTNode attribute:attributes){
+                    if (attribute instanceof EventAttribute){
+                        normalJsxElementCode.append(tagName).append(".addEventListener(").append(attribute.toJS()).append(");");
+                    }
+                }
+            }
+
+
+
 
 
 

@@ -9,14 +9,14 @@ const fn = ()=>{
 };
 ;
 const count = 1;
-return (( ()=>{const h1 = document.createElement('h1');
-	 h1.insertAdjacentHTML('beforeend','text '); h1.insertAdjacentHTML('beforeend', (()=>{
+return (( ()=>{const button = document.createElement('button');
+	 button.insertAdjacentHTML('beforeend', (()=>{
   							const childText= (count);
   							if(childText instanceof HTMLElement){
   							    return childText.outerHTML
   							}else{
   							return childText
   							}
-  								})()); h1.insertAdjacentHTML('beforeend','text2 '); return h1})())
+  								})()); button.addEventListener('click',fn);return button})())
 }
 export default App;

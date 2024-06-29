@@ -28,15 +28,7 @@ public class EventAttribute extends ASTNode{
 
     @Override
     public String toJS() {
-        //onclick="memberExpression.toJs()"
-        StringBuilder eventAttributeCode=new StringBuilder(" "+event.toLowerCase()+"=\"");
-        String fnCode=function.toJS();
-        eventAttributeCode.append(fnCode);
-        if(!(fnCode.charAt(fnCode.length()-1)==')')){
-            eventAttributeCode.append("()");
-        }
-        eventAttributeCode.append("\" ");
-
-        return eventAttributeCode.toString();
+        return "'" + (event.substring(2)).toLowerCase() + "'" + ',' +
+                function.toJS();
     }
 }

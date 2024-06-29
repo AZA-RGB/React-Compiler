@@ -7,11 +7,7 @@ import viteLogo from '/vite.svg'
 const   paragraph=() =>{
 const fn=()=>{}
 const count=1;
-  return (
-
-       <h1> text {count} text2</h1>
-
-  )
+ return <button onClick={fn}>{count}</button>
 }
 
 export default App
