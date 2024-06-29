@@ -30,16 +30,17 @@ public class JsxIdentifier extends ASTNode {
     @Override
     public String toJS() {
         StringBuilder JsxIdentifierCode=new StringBuilder();
-
+        String val = "";
         if (value!=null&& !Objects.equals(value.toJS(), "false")&&!(Objects.equals(value.toJS(), "true"))){//id=value
-                JsxIdentifierCode.append(' ').append(name).append('=').append((value).toJS());
+
+            val=value.toJS();
+
         }
         else if ((value==null)||(Objects.equals(value.toJS(), "true"))){ //eg:checked=true -> checked
-            //System.out.println("from jsxIdentifier---------------------------------------------name"+name);
-            JsxIdentifierCode.append(' ').append(name);
+                val="true";
         }
 
-        return JsxIdentifierCode.toString();
+        return "'"+name+"' , "+val;
     }
 
     public String toJS(boolean isCostumeComponent) {

@@ -4,19 +4,19 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 */
 
-const paragraph= ()=>{
+const App= ()=>{
 const fn = ()=>{
 };
 ;
-const count = 1;
-return (( ()=>{const button = document.createElement('button');
-	 button.insertAdjacentHTML('beforeend', (()=>{
+const count = [1,2,2];
+return (( ()=>{const input = document.createElement('input');
+	 input.insertAdjacentHTML('beforeend', (()=>{
   							const childText= (count);
   							if(childText instanceof HTMLElement){
   							    return childText.outerHTML
   							}else{
   							return childText
   							}
-  								})()); button.addEventListener('click',fn);return button})())
+  								})()); input.setAttribute('placeholder' , ...count);return input})())
 }
 export default App;

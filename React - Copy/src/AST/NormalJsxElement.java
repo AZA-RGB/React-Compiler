@@ -72,6 +72,10 @@ public class NormalJsxElement extends ASTNode  {
                 for (ASTNode attribute:attributes){
                     if (attribute instanceof EventAttribute){
                         normalJsxElementCode.append(tagName).append(".addEventListener(").append(attribute.toJS()).append(");");
+                    } else if (attribute instanceof JsxIdentifier) {
+                        normalJsxElementCode.append(tagName).append(".setAttribute(").append(attribute.toJS()).append(");");
+                    }else if(attribute instanceof JsxIdentifier){
+                        normalJsxElementCode.append(tagName).append(".setAttribute(").append(attribute.toJS()).append(");");
                     }
                 }
             }

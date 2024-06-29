@@ -1,17 +1,22 @@
-export default function App(){
-function fn(){
-console.log("ddddddddddddddddddddddd")
-}
+/* eslint-disable react/jsx-no-target-blank
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+*/
 
-const count = 1;
-return (( ()=>{const button = document.createElement('button');
-	 button.insertAdjacentHTML('beforeend', (()=>{
+const App= ()=>{
+const fn = ()=>{
+};
+;
+const count = [1,2,2];
+return (( ()=>{const input = document.createElement('input');
+	 input.insertAdjacentHTML('beforeend', (()=>{
   							const childText= (count);
   							if(childText instanceof HTMLElement){
   							    return childText.outerHTML
   							}else{
   							return childText
   							}
-  								})()); button.addEventListener('click',fn);return button})())
-
+  								})()); input.setAttribute('placeholder' , ...count);return input})())
 }
+export default App;
