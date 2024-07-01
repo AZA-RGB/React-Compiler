@@ -5,8 +5,14 @@ import viteLogo from '/vite.svg'
 */
 import Input from './Input.js'
 const App= ()=>{
-const fn = ()=>{
-};
-const count = "[1,2,2]";
-return  Input(Object.assign({placeholder:count}));}
+
+
+const images = [
+  'https://via.placeholder.com/800x400?text=First+Slide',
+  'https://via.placeholder.com/800x400?text=Second+Slide',
+  'https://via.placeholder.com/800x400?text=Third+Slide',
+];
+
+
+return  Input(Object.assign({images:images}));}
 export default App;

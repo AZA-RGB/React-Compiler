@@ -7,7 +7,7 @@ program: (statement)* (( functionalComponent (statement)*  exportDefault SEMI*)|
 //             useEffectDeclaration|jsx)(SEMI)*)*;
 //
 
-        id:IDENTIFIER|EVENT_ATTRIBUTE;
+        id:IDENTIFIER|EVENT_ATTRIBUTE|HTML_ATTRIBUTE_NAME|USESTATE|USEEFFECT|USEREF;
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //Start_Semantic_rules
@@ -158,8 +158,8 @@ program: (statement)* (( functionalComponent (statement)*  exportDefault SEMI*)|
         namedFunctionDeclaration:ASYNC? FUNCTION id LPAREN (argument(COMMA  argument)*)? RPAREN LCURLY functionBody RCURLY;
         //arrow function:   ()=>{}argumentList
 
-        arrowFunctionDeclaration:LPAREN (argument(COMMA  argument)*)? RPAREN
-                ARROW ((LCURLY functionBody RCURLY )|functionBody|(LPAREN functionBody RPAREN));
+        arrowFunctionDeclaration: LPAREN (argument(COMMA  argument)*)? RPAREN
+                ARROW ((LCURLY functionBody RCURLY )|(LPAREN functionBody RPAREN)|(functionBody));
 
         //regular anounymous function:     function(){}
         anonymousFunctionDeclaration:FUNCTION LPAREN (argument(COMMA  argument)*)? RPAREN LCURLY functionBody RCURLY;
@@ -190,15 +190,15 @@ program: (statement)* (( functionalComponent (statement)*  exportDefault SEMI*)|
         ///END of EXPORT
 
         // IMPORT
-         
-        importStatement: IMPORT((STAR AS id)|
-                        (LCURLY (importSpecifier (COMMA importSpecifier)* ) RCURLY )|
-                        (importSpecifier
-                            (COMMA(LCURLY (importSpecifier ( COMMA importSpecifier )*) RCURLY))
-                         )
-                         |importSpecifier)FROM String ;
+        moduleImport:(IMPORT String);
+        normalImport:IMPORT  ((STAR AS id) (FROM String)) #wildcard_import
+                    |IMPORT ((LCURLY (importSpecifier (COMMA importSpecifier)* ) RCURLY ) (FROM String))#destructured_import
+                    |IMPORT ( importSpecifier (COMMA(LCURLY (importSpecifier ( COMMA importSpecifier )*) RCURLY)) ) (FROM String) #default_and_named_import
+                    |IMPORT (importSpecifier (FROM String)) #default_import
+                     ;
+        importStatement: normalImport | moduleImport ;
 
-        importSpecifier:(id|USESTATE|USEEFFECT|USEREF) (AS id)?;
+        importSpecifier:(id) (AS id)?;
         ///END of IMPORT
 
         ////REACT STUFF
@@ -210,7 +210,7 @@ program: (statement)* (( functionalComponent (statement)*  exportDefault SEMI*)|
         //</id attribute>                                                                     `
         selfClosingElement:LESS_THAN  id(DOT id)*  jsxAttribute* DIVIDE GREATER_THAN;
         //{((functionCall|expression|unaryExpression|objectLiteral)*|(function)?|jsxExpression*)}
-        jsxExpression: LCURLY ( (functionCall|expression|unaryExpression|objectLiteral)?|(function)?|spreadOperation|jsxExpression?) RCURLY ;
+        jsxExpression: LCURLY ( (functionCall|tenaryExpression|expression|unaryExpression|objectLiteral)?|(function)?|spreadOperation|jsxExpression?) RCURLY ;
         //<html a> (jsx|jsxExp|id)* </html>
         normalJsxElement:(openTag) (jsx|jsxExpression|statement)* (closeTag);
         //<>(jsx|jsxExpression|id)*<>
@@ -219,7 +219,7 @@ program: (statement)* (( functionalComponent (statement)*  exportDefault SEMI*)|
         //{...f()} // id // id=x
         jsxAttribute:(LCURLY  spreadOperation RCURLY) #jsxSpreadAttribute
                    |(EVENT_ATTRIBUTE EQUAL LCURLY ((LPAREN RPAREN ARROW  (memberExpression |LCURLY memberExpression RCURLY))|(memberExpression)) RCURLY) #eventAttribute
-                    |(  id (EQUAL (literal |jsxExpression ))? )#jsxIdentifier;
+                    |(  HTML_ATTRIBUTE_NAME (EQUAL (literal |jsxExpression ))? )#jsxIdentifier;
         //...f(){} //...x//...a+c
         spreadOperation:DOT DOT DOT (id|literal|array|function|functionCall);
 

@@ -634,6 +634,64 @@ public interface ReactParserListener extends ParseTreeListener {
 	 */
 	void exitExportAll(ReactParser.ExportAllContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ReactParser#moduleImport}.
+	 * @param ctx the parse tree
+	 */
+	void enterModuleImport(ReactParser.ModuleImportContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ReactParser#moduleImport}.
+	 * @param ctx the parse tree
+	 */
+	void exitModuleImport(ReactParser.ModuleImportContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code wildcard_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void enterWildcard_import(ReactParser.Wildcard_importContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code wildcard_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void exitWildcard_import(ReactParser.Wildcard_importContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code destructured_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void enterDestructured_import(ReactParser.Destructured_importContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code destructured_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void exitDestructured_import(ReactParser.Destructured_importContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code default_and_named_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefault_and_named_import(ReactParser.Default_and_named_importContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code default_and_named_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefault_and_named_import(ReactParser.Default_and_named_importContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code default_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefault_import(ReactParser.Default_importContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code default_import}
+	 * labeled alternative in {@link ReactParser#normalImport}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefault_import(ReactParser.Default_importContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ReactParser#importStatement}.
 	 * @param ctx the parse tree
 	 */

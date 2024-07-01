@@ -49,7 +49,7 @@ public class ArrowFunction extends  ASTNode{
             ArrowFunctionCode.append("()=>" + (isLambdaExpression ? "(" : "{\n"))
                     .append(functionBody.toJS()).append((isLambdaExpression ? " )" : "}"));
         }
-          return ArrowFunctionCode.toString()+";\n";
+          return ArrowFunctionCode.toString()+"\n";
 	}
 
 

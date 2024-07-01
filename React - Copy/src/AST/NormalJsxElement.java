@@ -56,7 +56,11 @@ public class NormalJsxElement extends ASTNode  {
                                 "  \t\t\t\t\t\t\tconst childText= ("+ ((JsxExpression) child).toJS()+");\n" +
                                 "  \t\t\t\t\t\t\tif(childText instanceof HTMLElement){\n" +
                                 "  \t\t\t\t\t\t\t    return childText.outerHTML\n" +
-                                "  \t\t\t\t\t\t\t}else{\n" +
+                                "  \t\t\t\t\t\t\t}" +
+                                "else if(Array.isArray(childText)) {\n" +
+                                "              return childText.map(element => element.outerHTML);\n" +
+                                "            }" +
+                                "else{\n" +
                                 "  \t\t\t\t\t\t\treturn childText\n" +
                                 "  \t\t\t\t\t\t\t}\n" +
                                 "  \t\t\t\t\t\t\t\t})());");

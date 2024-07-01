@@ -24,11 +24,11 @@ public class BaseVisitor extends ReactParserBaseVisitor {
     }
     @Override //NEW_EDIT TODO : check if useState is transforming
     public Object visitSemantic_rule(ReactParser.Semantic_ruleContext ctx) {
-//        String errorMessage = "Semantic Error:is not valid the role";
-//        symbolTable.semanticError(errorMessage, ctx.getStart().getLine());
-        System.out.println( super.visitSemantic_rule(ctx).toString());
-//        return super.visitSemantic_rule(ctx);
-        return null;
+        String errorMessage = "Semantic Error:is not valid the role";
+        symbolTable.semanticError(errorMessage, ctx.getStart().getLine());
+        //System.out.println( super.visitSemantic_rule(ctx).toString());
+        return super.visitSemantic_rule(ctx);
+
     }
 
     @Override
@@ -178,9 +178,9 @@ public class BaseVisitor extends ReactParserBaseVisitor {
     @Override
     public ASTNode visitJsxIdentifier(ReactParser.JsxIdentifierContext ctx) {
         if (ctx.children.size() == 1) {//id
-            return new JsxIdentifier((ctx.id().getText()));
+            return new JsxIdentifier((ctx.HTML_ATTRIBUTE_NAME().getText()));
         } else {//id=
-            return new JsxIdentifier((ASTNode) visit(ctx.getChild(2)), (ctx.id().getText()));
+            return new JsxIdentifier((ASTNode) visit(ctx.getChild(2)), (ctx.HTML_ATTRIBUTE_NAME().getText()));
         }
     }
 
@@ -1308,32 +1308,54 @@ public class BaseVisitor extends ReactParserBaseVisitor {
     }
 
     @Override
-    public ASTNode visitImportStatement(ReactParser.ImportStatementContext ctx) {
-        ImportStatement importStatement;
-        if (ctx.STAR() != null) {//import all
-            importStatement = new ImportStatement("Import All");
-            ImportSpecifier importSpecifier = new ImportSpecifier(ctx.id().getText(), "*");
-            importStatement.addImportSpecifier(importSpecifier);
-        } else if (ctx.importSpecifier().size() == 1 && ctx.LCURLY() == null) {//default
-            importStatement = new ImportStatement("Default import");
-            importStatement.addImportSpecifier((ImportSpecifier) visitImportSpecifier(ctx.importSpecifier(0)));
-        } else if (ctx.getChild(1) instanceof ReactParser.ImportSpecifierContext && ctx.importSpecifier().size() > 1) {//default and none-default
-            importStatement = new ImportStatement("Default and non-default import");
-            for (ReactParser.ImportSpecifierContext importSpecifierContext : ctx.importSpecifier()) {
-                importStatement.addImportSpecifier((ImportSpecifier) visitImportSpecifier(importSpecifierContext));
-            }
-        } else {//non-default import
-            importStatement = new ImportStatement("Non-default import");
-            for (ReactParser.ImportSpecifierContext importSpecifierContext : ctx.importSpecifier()) {
-                importStatement.addImportSpecifier((ImportSpecifier) visitImportSpecifier(importSpecifierContext));
-            }
-        }
-        //get the source if any
-        if (ctx.FROM() != null) {
-            importStatement.setSource(ctx.getChild(ctx.children.size() - 1).getText());
+    public ASTNode visitModuleImport(ReactParser.ModuleImportContext ctx) {
+        String source=ctx.String().getText();
+        return new moduleImport(source);
+    }
 
+    @Override
+    public ASTNode visitDefault_and_named_import(ReactParser.Default_and_named_importContext ctx) {
+        DefaultNamedImport defaultNamedImport=new DefaultNamedImport(ctx.String().getText());
+
+        for (ReactParser.ImportSpecifierContext importSpecifierContext : ctx.importSpecifier()) {
+            defaultNamedImport.addImportSpecifier((ImportSpecifier) visitImportSpecifier(importSpecifierContext));
         }
-        return importStatement;
+        return defaultNamedImport;
+    }
+
+    @Override
+    public ASTNode visitDestructured_import(ReactParser.Destructured_importContext ctx) {
+        DestructuredImport destructuredImport=new DestructuredImport(ctx.String().getText());
+
+        for (ReactParser.ImportSpecifierContext importSpecifierContext : ctx.importSpecifier()) {
+            destructuredImport.addImportSpecifier((ImportSpecifier) visitImportSpecifier(importSpecifierContext));
+        }
+                return destructuredImport;
+    }
+
+    @Override
+    public ASTNode visitWildcard_import(ReactParser.Wildcard_importContext ctx) {
+        Identifier id=(Identifier) visitId(ctx.id());
+        String source=ctx.String().getText();
+        return new WildCardImport(id,source);
+//        for (ReactParser.ImportSpecifierContext importSpecifierContext : ctx.importSpecifier()) {
+//            importStatement.addImportSpecifier((ImportSpecifier) visitImportSpecifier(importSpecifierContext));
+//        }
+
+
+    }
+
+    @Override
+    public ASTNode visitDefault_import(ReactParser.Default_importContext ctx) {
+            ImportSpecifier importSpecifier= (ImportSpecifier) visitImportSpecifier(ctx.importSpecifier());
+            String source=ctx.String().getText();
+
+        return new DefaultImport(importSpecifier,source) ;
+    }
+
+    @Override
+    public ASTNode visitImportStatement(ReactParser.ImportStatementContext ctx) {
+        return (ASTNode) visit(ctx.getChild(0));
     }
 
 
@@ -1392,10 +1414,14 @@ public class BaseVisitor extends ReactParserBaseVisitor {
         symbolTable.put(componentName.id, symbol);
         symbolTable.enterScope("Component[" + componentName.id + "]");
         componentFunctionBody = (ComponentFunctionBody) visitComponentFunctionBody(ctx.componentFunctionBody());
+
         if (ctx.props() != null) {
+            symbolTable.arg();
             Props props = (Props) visit(ctx.props());
+            symbolTable.arg();
             return new NamedComponentDeclaration(componentName, props, componentFunctionBody);
         }
+
         symbolTable.exitScope();
         return new NamedComponentDeclaration(componentName, componentFunctionBody);
     }

@@ -148,7 +148,7 @@ COLON:':';
 QUESITIONMARK:'?';
 // Literals
 //React: ('"' 'react'  '"') | ('\'' 'react'  '\'') ;
-String: ('"' (~["'])*  '"') | ('\'' (~["'])*  '\'') | ('`' .*  '`');
+String: ('"' (~["'])*  '"') | ('\'' (~["'])*  '\'') | ('`' (~[`])*  '`');
 
 Boolean: 'true' | 'false';
 Undefined:'undefined';
@@ -169,5 +169,7 @@ USESTATE:'React.useState'|'useState';
 USEEFFECT:'React.useEffect'|'useEffect';
 CREATEELEMENT:'React.createElement'|'createElement';
 USEREF:'React.useRef'|'useRef';
+
+HTML_ATTRIBUTE_NAME: [a-zA-Z_$][a-zA-Z0-9_$-]* (~('>' | '<' | '/' |'\n'| '\\'|'.'|'('|')'|'['|']'|'{'|'}'|'='|' '|'-'|','|';'|':'|'+'|'*'|'?'))?  ;
 // identifire
 IDENTIFIER : [a-zA-Z_$][a-zA-Z0-9_$]* (~('>' | '<' | '/' |'\n'| '\\'|'.'|'('|')'|'['|']'|'{'|'}'|'='|' '|','|';'|':'|'+'|'-'|'*'|'?'))?;

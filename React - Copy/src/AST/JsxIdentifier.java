@@ -39,8 +39,10 @@ public class JsxIdentifier extends ASTNode {
         else if ((value==null)||(Objects.equals(value.toJS(), "true"))){ //eg:checked=true -> checked
                 val="true";
         }
-
-        return "'"+name+"' , "+val;
+        if(Objects.equals(val, "className") || Objects.equals(val, "classname")){
+           val="class";
+        }
+        return "'"+name.toLowerCase()+"' , "+val;
     }
 
     public String toJS(boolean isCostumeComponent) {
